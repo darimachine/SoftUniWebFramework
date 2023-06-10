@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% for todo in todo_list %}
+        <div><h1><a href="{%  url 'detail' todo.id %}">{{ todo.title }} - {{ todo.category.name }}<a></h1></div>
+    {% endfor %}
+</body>
+</html>
