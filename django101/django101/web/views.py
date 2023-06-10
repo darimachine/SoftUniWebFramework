@@ -69,5 +69,8 @@ class TodoCreateView(CreateView):
         form.fields['title'].label='aaaaaaTitle'
         return form
 
+    def get_form_class(self):
+        return super().get_form_class()
+
 
 
