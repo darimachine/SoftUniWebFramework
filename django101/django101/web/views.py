@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import *
@@ -6,11 +8,12 @@ from django101.web.models import Todo
 
 
 # Create your views here.
-
+@login_required
 def index(request):
     context = {
         'title': 'Django101'
     }
+    print(authenticate(request,username="serhan", password="123456"))
     return render(request, 'index.html', context)
 
 
@@ -36,21 +39,18 @@ class IndexTemplateView(TemplateView):
 class TodosListList(ListView):
     model = Todo
     template_name = 'todos_list.html'
-    ordering = ['-title']
     context_object_name = 'todo_list'
 
     def get_context_data(self, *, object_list=None, **kwargs):
+
         context = super().get_context_data(**kwargs)
         context['title'] = 'Django101-list'
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        title_filter = self.request.GET.get('filter', None)
-        if title_filter:
-            queryset = queryset.filter(title__icontains=title_filter)
 
-        queryset = queryset.prefetch_related('category')
+
         return queryset
 
 
