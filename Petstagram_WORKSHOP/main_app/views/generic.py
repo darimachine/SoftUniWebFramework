@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth import mixins
 from django.shortcuts import render, redirect
 from django.views import generic as views
 
-from ..helpers import get_profile
+from common.view_mixins import RedirectToDashboard
 from ..models import PetPhoto
 
 UserModel = get_user_model()
@@ -13,7 +12,7 @@ UserModel = get_user_model()
 #     }
 #
 #     return render(request,'home_page.html',context)
-class HomeView(views.TemplateView):
+class HomeView(RedirectToDashboard,views.TemplateView):
     template_name = 'home_page.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

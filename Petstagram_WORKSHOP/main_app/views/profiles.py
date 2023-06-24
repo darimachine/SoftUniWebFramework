@@ -1,11 +1,11 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView
 
+from accounts.models import Profile
+from common.view_mixins import RedirectToDashboard
 from ..forms import CreateProfileForm, EditProfileForm, DeleteProfileForm
-from ..helpers import get_profile
-from ..models import PetPhoto, Pet, Profile
+from common.helpers import get_profile
+from ..models import PetPhoto, Pet
 
 
 def show_profile(request):
@@ -43,14 +43,11 @@ class ShowProfileView(DetailView):
         return context
 
 
-class CreateProfileView(CreateView):
+class CreateProfileView(RedirectToDashboard,CreateView):
     model = Profile
     template_name = 'profile_create.html'
     form_class = CreateProfileForm
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect('dashboard')
-        return super().dispatch(request, *args, **kwargs)
+
 def create_profile(request):
     if request.method == 'POST':
         profile_form=CreateProfileForm(request.POST, request.FILES)

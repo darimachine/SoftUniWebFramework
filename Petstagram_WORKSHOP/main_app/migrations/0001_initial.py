@@ -4,7 +4,7 @@ from django.conf import settings
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
-import main_app.validators
+import common.validators
 
 
 class Migration(migrations.Migration):
@@ -28,8 +28,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Profile',
             fields=[
-                ('first_name', models.CharField(max_length=30, validators=[django.core.validators.MinLengthValidator(2, 'first name must be between 2 and 30'), main_app.validators.only_letters_validator])),
-                ('last_name', models.CharField(max_length=30, validators=[django.core.validators.MinLengthValidator(2, 'last name must be between 2 and 30'), main_app.validators.only_letters_validator])),
+                ('first_name', models.CharField(max_length=30, validators=[django.core.validators.MinLengthValidator(2, 'first name must be between 2 and 30'), common.validators.only_letters_validator])),
+                ('last_name', models.CharField(max_length=30, validators=[django.core.validators.MinLengthValidator(2, 'last name must be between 2 and 30'), common.validators.only_letters_validator])),
                 ('picture', models.URLField()),
                 ('date_of_birth', models.DateField(blank=True, null=True)),
                 ('description', models.TextField(blank=True, null=True)),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
             name='PetPhoto',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('photo', models.ImageField(upload_to='', validators=[main_app.validators.ValidateFileMaxSizeInMB(5)])),
+                ('photo', models.ImageField(upload_to='', validators=[common.validators.ValidateFileMaxSizeInMB(5)])),
                 ('description', models.TextField(blank=True, null=True)),
                 ('date_of_publication', models.DateTimeField(auto_now_add=True)),
                 ('likes', models.IntegerField(default=0)),

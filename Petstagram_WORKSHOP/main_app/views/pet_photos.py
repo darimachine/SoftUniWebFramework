@@ -5,7 +5,6 @@ from django.views import generic as views
 
 
 from ..forms import CreatePetPhotoForm, EditPetPhotoForm
-from ..helpers import get_profile
 from ..models import PetPhoto, Pet
 
 
