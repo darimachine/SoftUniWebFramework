@@ -1,14 +1,20 @@
+from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.views import generic as views
 from django.shortcuts import render, redirect
 
-from ..forms import CreatePetForm, DeletePetForm, EditPetForm
-from ..helpers import get_profile
+from ..forms import CreatePetForm, EditPetForm, DeletePetForm
+
 from ..models import PetPhoto, Pet
 
+UserModel=get_user_model()
 class CreatePetView(views.CreateView):
     template_name = 'pet_create.html'
     form_class = CreatePetForm
+    success_url = reverse_lazy('dashboard')
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 class EditPetView(views.UpdateView):
     template_name = "pet_edit.html"

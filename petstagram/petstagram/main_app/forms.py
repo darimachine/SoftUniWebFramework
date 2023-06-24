@@ -127,6 +127,31 @@ class CreatePetForm(BootstrapFormMixin,forms.ModelForm):
 
         }
 
+class EditPetForm(BootstrapFormMixin,forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self._init_bootstrap_form_controls()
+
+
+    class Meta:
+        model = Pet
+        fields = ('name','type','date_of_birth')
+        widgets={
+            'name':forms.TextInput(
+                attrs={
+                    'placeholder':'Enter pet name'
+                }),
+            'date_of_birth': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'min': '1920-01-01',
+                    'max': datetime.date.today()
+
+                }
+            )
+
+        }
+
 class DeletePetForm(BootstrapFormMixin,DisabledFieldsFormMixin,forms.ModelForm):
 
     def __init__(self,*args,**kwargs):

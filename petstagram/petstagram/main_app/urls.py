@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views.generic import  ShowDashboardView, show_error, HomeView
 from .views.pet_photos import show_pet_photo_details, like_pet, create_pet_photo, edit_pet_photo
-from .views.pets import create_pet, edit_pet, delete_pet
+from .views.pets import CreatePetView,EditPetView,DeletePetView
 from .views.profiles import show_profile, create_profile, edit_profile, delete_profile
 
 urlpatterns = [
@@ -14,9 +14,9 @@ urlpatterns = [
     path('profile/edit/', edit_profile, name='edit_profile'),
     path('profile/delete/', delete_profile, name='delete_profile'),
     #pet
-    path('pet/create', create_pet, name='create_pet'),
-    path('pet/edit/<int:pk>/', edit_pet, name='edit_pet'),
-    path('pet/delete/<int:pk>/', delete_pet, name='delete_pet'),
+    path('pet/create', CreatePetView.as_view(), name='create_pet'),
+    path('pet/edit/<int:pk>/', EditPetView.as_view(), name='edit_pet'),
+    path('pet/delete/<int:pk>/', DeletePetView.as_view(), name='delete_pet'),
     #PetPhoto
     path('photo/details/<int:pk>', show_pet_photo_details, name='pet_photo_details'),
     path('photo/like/<int:pk>/', like_pet, name='like_pet_photo'),
