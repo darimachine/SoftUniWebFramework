@@ -12,17 +12,13 @@ class ShowPetPhotoDetail(LoginRequiredMixin,views.DetailView):
     model = PetPhoto
     template_name = 'photo_details.html'
     context_object_name = 'pet_photo'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = queryset.prefetch_related('tagged_pets')
-        return queryset
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_owner'] =self.object.user == self.request.user
-
         return context
 
+#Written in FBV
+#-------------------------------------------------
 # def show_pet_photo_details(request,pk):
 #     pet = PetPhoto.objects.get(id=pk)
 #     context={
@@ -33,6 +29,7 @@ class ShowPetPhotoDetail(LoginRequiredMixin,views.DetailView):
 
 def like_pet(request,pk):
     pet_photo = PetPhoto.objects.prefetch_related('tagged_pets').get(pk=pk)
+    pet_photo.description="Mishka"
     pet_photo.likes+=1
     pet_photo.save()
     return redirect('pet_photo_details',pk)
@@ -44,10 +41,6 @@ class CreatePetPhotoView(LoginRequiredMixin,views.CreateView):
     form_class = CreatePetPhotoForm
     success_url = reverse_lazy('dashboard')
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     queryset = queryset.prefetch_related('tagged_pets').filter(user=self.request.user)
-    #     return queryset
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
@@ -60,8 +53,8 @@ class CreatePetPhotoView(LoginRequiredMixin,views.CreateView):
         #form.fields['tagged_pets'].choices = [(p.id,p.name) for p in user_pets]
         return form
 
-
-
+#Written in FBV
+#-------------------------------------------------
 # def create_pet_photo(request):
 #     if request.method == "POST":
 #         pet_photo_form = CreatePetPhotoForm(request.POST,request.FILES)
@@ -78,7 +71,6 @@ class CreatePetPhotoView(LoginRequiredMixin,views.CreateView):
 #     return render(request,'photo_create.html',context)
 
 class EditPetPhotoView(views.UpdateView):
-    model = PetPhoto
     template_name = 'photo_edit.html'
     form_class = EditPetPhotoForm
     success_url = reverse_lazy('dashboard')
