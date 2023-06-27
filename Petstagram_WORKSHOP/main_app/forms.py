@@ -122,7 +122,7 @@ class EditPetPhotoForm(BootstrapFormMixin,forms.ModelForm):
             'photo': forms.ClearableFileInput(
                 attrs={
                     'class': 'form-control-file',
-                    'disabled':'disabled'
+
                 }
             ),
             'description': forms.Textarea(

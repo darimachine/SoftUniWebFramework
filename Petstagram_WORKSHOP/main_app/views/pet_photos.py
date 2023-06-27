@@ -1,3 +1,7 @@
+import os
+import shutil
+
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -71,6 +75,7 @@ class CreatePetPhotoView(LoginRequiredMixin,views.CreateView):
 #     return render(request,'photo_create.html',context)
 
 class EditPetPhotoView(views.UpdateView):
+    model = PetPhoto
     template_name = 'photo_edit.html'
     form_class = EditPetPhotoForm
     success_url = reverse_lazy('dashboard')
@@ -79,6 +84,24 @@ class EditPetPhotoView(views.UpdateView):
         context = super().get_context_data(**kwargs)
         context['pet'] = self.object
         return context
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        user_pets = Pet.objects.filter(user=self.request.user)
+        form.fields['tagged_pets'].queryset = user_pets
+        return form
+    def form_valid(self, form):
+        photo = form.instance
+        current_photo=PetPhoto.objects.get(pk=photo.pk)
+        if photo.photo:
+            photo_path = current_photo.photo.path
+            if os.path.exists(photo_path):
+                os.remove(photo_path)
+        uploaded_photo = self.request.FILES.get('photo')
+        if uploaded_photo:
+            # Save the uploaded photo file
+            photo.photo = uploaded_photo
+        return super().form_valid(form)
+
 
 def edit_pet_photo(request,pk):
     pet_photo = PetPhoto.objects.get(pk=pk)

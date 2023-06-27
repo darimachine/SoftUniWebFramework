@@ -40,7 +40,7 @@ class UserRegisterView(RedirectToDashboard,views.CreateView):
         return result
 
 class UserLoginView(auth_views.LoginView):
-    template_name = 'accounts/login_page.html'
+    template_name = 'accounts/change_password.html'
     success_url = reverse_lazy('dashboard')
 #Written with FBV
 #--------------------------------------
@@ -64,11 +64,13 @@ class UserLoginView(auth_views.LoginView):
 class EditUserProfileView(views.UpdateView):
     template_name = 'accounts/profile_edit.html'
     form_class = EditProfileForm
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('dashboard')
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)
 
 
-class EditPasswordView(auth_views.PasswordChangeView):
-    template_name = 'accounts/edit_password.html'
+class ChangePasswordView(auth_views.PasswordChangeView):
+    template_name = 'accounts/change_password.html'
 
 # Written with FBV
 #--------------------------------------------------------

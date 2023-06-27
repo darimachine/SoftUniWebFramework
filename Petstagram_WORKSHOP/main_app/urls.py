@@ -18,7 +18,7 @@ urlpatterns = [
     path('photo/details/<int:pk>', ShowPetPhotoDetail.as_view(), name='pet_photo_details'),
     path('photo/like/<int:pk>/', like_pet, name='like_pet_photo'),
     path('photo/add/', CreatePetPhotoView.as_view(), name='pet_photo_create'),
-    path('photo/edit/<int:pk>/', edit_pet_photo, name='pet_photo_edit'),
+    path('photo/edit/<int:pk>/', EditPetPhotoView.as_view(), name='pet_photo_edit'),
     #error
     path('error_401/', show_error, name='401_error'),
 
