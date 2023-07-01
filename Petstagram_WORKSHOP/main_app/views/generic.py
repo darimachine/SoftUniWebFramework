@@ -28,6 +28,8 @@ class ShowDashboardView(views.ListView):
     model = PetPhoto
     template_name = 'dashboard.html'
     context_object_name = 'pet_photos'
+    paginate_by = 5
+
 
 
 def show_error(request):
