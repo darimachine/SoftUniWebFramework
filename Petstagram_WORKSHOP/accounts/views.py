@@ -1,5 +1,6 @@
 from django.contrib.auth import forms as auth_forms, login
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LogoutView
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic as views
@@ -40,8 +41,13 @@ class UserRegisterView(RedirectToDashboard,views.CreateView):
         return result
 
 class UserLoginView(auth_views.LoginView):
-    template_name = 'accounts/change_password.html'
+    template_name = 'accounts/login_user.html'
     success_url = reverse_lazy('dashboard')
+
+    # def form_valid(self, form):
+    #     result = super().form_valid(form)
+    #     login(self.request, self.object)
+    #     return result
 #Written with FBV
 #--------------------------------------
 # def edit_profile(request):
@@ -109,6 +115,8 @@ class ShowProfileView(views.DetailView):
         context['is_owner'] = self.object.user_id == self.request.user.id
         return context
 
+class MyLogOutView(LogoutView):
+    next_page = reverse_lazy('index')
 
 
 
