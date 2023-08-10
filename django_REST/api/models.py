@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 # Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=25)
 
 class Product(models.Model):
     NAME_MAX_LENGTH = 25
@@ -12,3 +14,10 @@ class Product(models.Model):
             MinValueValidator(PRICE_MIN_VALUE)
         ]
     )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE
+    )
+
+
+
