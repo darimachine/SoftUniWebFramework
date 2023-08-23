@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 from api.models import Product, Category
 
-
+from rest_framework import permissions
 # This should in file serializers.py
 class CategoryForProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +19,16 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
+class ProductSerializerOnly(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields=['id', 'name','price']
+class FullCategorySerializer(serializers.ModelSerializer):
 
+    product_set = ProductSerializerOnly(many=True)
+    class Meta:
+        model = Category
+        fields = '__all__'
 
 # Create your views here.
 class ManualProductListView(APIView):
@@ -38,6 +47,18 @@ class ManualProductListView(APIView):
 class ProductsListView(api_views.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    def list(self, request, *args, **kwargs):
+        print(self.request.user)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class ProductsCreateView(api_views.CreateAPIView):
     queryset = Product.objects.all()
@@ -45,7 +66,7 @@ class ProductsCreateView(api_views.CreateAPIView):
 
 class CategoryListView(api_views.ListCreateAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategoryForProductSerializer
+    serializer_class = FullCategorySerializer
 
 class SinglePdocutView(api_views.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
